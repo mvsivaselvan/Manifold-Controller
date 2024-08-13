@@ -6,11 +6,12 @@
 #define BUTTON_HIGH 11
 #define BUTTON_RESET 5
 
-#define LED_LOW 1
+#define LED_LOW 12
 #define LED_HIGH 2
-#define LED_INTERLOCK 0
+#define LED_INTERLOCK 8
 
 #define E_STOP 3
+#define DIGITAL_E_STOP 6
 
 enum ContollerState {STATE_OFF, STATE_LOW, STATE_HIGH, STATE_INTERLOCK};
 enum ContollerState state;
@@ -41,6 +42,7 @@ void setup() {
   pinMode(LED_INTERLOCK, OUTPUT);
 
   pinMode(E_STOP, INPUT);
+  pinMode(DIGITAL_E_STOP, INPUT);
 }
 
 void loop() {
@@ -67,7 +69,7 @@ void loop() {
     buttonResetToggled = 1;
   buttonResetOld = buttonResetNew;
 
-  estop = digitalRead(E_STOP);
+  estop = digitalRead(E_STOP) || digitalRead(DIGITAL_E_STOP);
 
   switch (state) {
     case STATE_OFF:
@@ -117,5 +119,6 @@ void loop() {
         if (buttonResetToggled && (estop == 0))
           state = STATE_OFF;     
   }
+
   delay(20);
 }
